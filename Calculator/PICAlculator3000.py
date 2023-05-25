@@ -182,124 +182,123 @@ janela = sg.Window('PICAlculator 3000', layout, size=(390, 500))
 settings = sg.Window('PICAlculator 3000', layout2, size=(300, 250))
 set = False
 while True:
-    if set == False:
-        eventos, valores = janela.read()
-        janela.maximize()
-        if eventos == 'settings':
+    if not set:
+        events, values = janela.read()
+        if events == 'settings':
             set = True
-            janela.minimize()
+            janela.close()
             continue
-        if eventos == 'memory_store':
+        if events == 'memory_store':
             m = sentence
-        if eventos == 'memory_restore':
+        if events == 'memory_restore':
             sentence = m
             janela['num'].update(sentence)
-        if eventos == 'memory_sum':
+        if events == 'memory_sum':
             m = find_operator(f'{m} + {sentence}')
-        if eventos == 'memory_sub':
+        if events == 'memory_sub':
             m = find_operator(f'{m} - {sentence}')
-        if eventos == 'clear':
+        if events == 'clear':
             sentence = ''
             sentence2 = ''
             janela['num'].update('0')
             janela['num2'].update('')
-        if eventos == 'sin':
+        if events == 'sin':
             sentence = math.sin(math.radians(float(sentence)))
             janela['num'].update(sentence)
-        if eventos == 'cos':
+        if events == 'cos':
             sentence = math.cos(math.radians(float(sentence)))
             janela['num'].update(sentence)
-        if eventos == 'tan':
+        if events == 'tan':
             sentence = math.tan(math.radians(float(sentence)))
             janela['num'].update(sentence)
-        if eventos == 'pot_two':
+        if events == 'pot_two':
             sentence = math.pow(float(sentence), 2)
             janela['num'].update(sentence)
-        if eventos == 'square_root':
+        if events == 'square_root':
             sentence = math.sqrt(float(sentence))
             janela['num'].update(sentence)
-        if eventos == 'pi':
+        if events == 'pi':
             sentence = 3.1415926535897932384626433832795
             janela['num'].update(sentence)
-        if eventos == 'par1':
+        if events == 'par1':
             sentence2 += sentence + ' ( '
             sentence = ''
             janela['num'].update('0')
             janela['num2'].update(sentence2)
-        if eventos == 'par2':
+        if events == 'par2':
             sentence2 += sentence + ' ) '
             sentence = ''
             janela['num'].update('0')
             janela['num2'].update(sentence2)
-        if eventos == 'factorial':
+        if events == 'factorial':
             sentence = str(math.factorial(sentence))
             janela['num'].update(sentence)
-        if eventos == 'div':
+        if events == 'div':
             sentence2 += sentence + ' / '
             sentence = ''
             janela['num'].update('0')
             janela['num2'].update(sentence2)
-        if eventos == 'pot_x':
+        if events == 'pot_x':
             sentence2 += sentence + ' ^ '
             sentence = ''
             janela['num'].update('0')
             janela['num2'].update(sentence2)
-        if eventos == 'seven':
+        if events == 'seven':
             sentence += '7'
             janela['num'].update(sentence)
-        if eventos == 'eight':
+        if events == 'eight':
             sentence += '8'
             janela['num'].update(sentence)
-        if eventos == 'nine':
+        if events == 'nine':
             sentence += '9'
             janela['num'].update(sentence)
-        if eventos == 'mult':
+        if events == 'mult':
             sentence2 += sentence + ' * '
             sentence = ''
             janela['num'].update('0')
             janela['num2'].update(sentence2)
-        if eventos == 'ten_pot':
+        if events == 'ten_pot':
             sentence = find_operator(f'10 ^ {sentence}')
             janela['num'].update(sentence)
-        if eventos == 'four':
+        if events == 'four':
             sentence += '4'
             janela['num'].update(sentence)
-        if eventos == 'five':
+        if events == 'five':
             sentence += '5'
             janela['num'].update(sentence)
-        if eventos == 'six':
+        if events == 'six':
             sentence += '6'
             janela['num'].update(sentence)
-        if eventos == 'minus':
+        if events == 'minus':
             sentence2 += sentence + ' - '
             sentence = ''
             janela['num'].update('0')
             janela['num2'].update(sentence2)
-        if eventos == 'model_x':
+        if events == 'model_x':
             if sentence[0] == '-':
                 sentence = str(float(sentence) * -1)
                 janela['num'].update(sentence)
-        if eventos == 'one':
+        if events == 'one':
             sentence += '1'
             janela['num'].update(sentence)
-        if eventos == 'two':
+        if events == 'two':
             sentence += '2'
             janela['num'].update(sentence)
-        if eventos == 'three':
+        if events == 'three':
             sentence += '3'
             janela['num'].update(sentence)
-        if eventos == 'plus':
+        if events == 'plus':
             sentence2 += sentence + ' + '
             sentence = ''
             janela['num'].update('0')
             janela['num2'].update(sentence2)
-        if eventos == 'log':
+        if events == 'log':
             if '.' not in sentence:
                 sentence = str(math.log10(int(sentence)))
             else:
                 sentence = str(math.log10(float(sentence)))
             janela['num'].update(sentence)
-        if eventos == 'inverter':
+        if events == 'inverter':
             if sentence[0] == '-':
                 if '.' in sentence:
                     sentence = str(float(sentence) * -1)
@@ -309,13 +308,13 @@ while True:
             else:
                 sentence = '-' + sentence
                 janela['num'].update(sentence)
-        if eventos == 'zero':
+        if events == 'zero':
             sentence += '0'
             janela['num'].update(sentence)
-        if eventos == 'point':
+        if events == 'point':
             sentence += '.'
             janela['num'].update(sentence)
-        if eventos == 'equal':
+        if events == 'equal':
             sentence2 += sentence
             sentence = find_operator(sentence2)
             janela['num'].update(sentence)
@@ -323,11 +322,8 @@ while True:
             sentence = ''
             sentence2 = ''
     else:
-        eventos, valores = settings.read()
-        settings.maximize()
-        if eventos == 'turn':
+        events, values = settings.read()
+        if events == 'turn':
             set = False
-            settings.minimize()
-            continue
-    if eventos == sg.WINDOW_CLOSED:
+    if events == sg.WINDOW_CLOSED:
         break
