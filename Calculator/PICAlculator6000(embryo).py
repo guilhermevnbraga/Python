@@ -2,7 +2,7 @@ import PySimpleGUI as sg
 
 sg.theme('DarkGreen3')
 layout = [
-    [sg.Text('PICAlculator 3000    ', justification='r', size=(23, 1), font='Arial 18'),
+    [sg.Text('PICAlculator 3000   ', justification='r', size=(23, 1), font='Arial 18'),
      sg.Button('⚙', key='settings', size=(2, 1))],
     [sg.Text('')],
     [sg.Text(size=(300, 1), key='num2', justification='r')],
