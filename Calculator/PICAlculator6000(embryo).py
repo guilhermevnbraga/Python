@@ -135,5 +135,4 @@ layout = [
 ]
 
 calculatorGUI = sg.Window('PICAlculator 3000', layout, size=(390, 500))
-# calculatorGUI.read()
-print(operations('2*2/2^2'))
+calculatorGUI.read()
