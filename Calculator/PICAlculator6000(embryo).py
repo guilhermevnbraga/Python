@@ -135,4 +135,5 @@ layout = [
 ]
 
 calculatorGUI = sg.Window('PICAlculator 6000', layout, size=(390, 500))
-calculatorGUI.read()
+while True:
+    events, values = calculatorGUI.read()
