@@ -1,60 +1,60 @@
 import PySimpleGUI as sg
+import re
 
 
-# Find the coordinates for the desired operation on the sentence
-def operationFinder(operator, sentence):
-    for c in range(sentence.index(operator) - 1, -1, -1):
-        if not sentence[c].isnumeric() or c == 0:
-            init = c
-            break
-    for c in range(sentence.index(operator) + 1, len(sentence)):
-        if not sentence[c].isnumeric() or c == len(sentence) - 1:
-            final = c
-            break
+# Find the desired operation with regex
+def findRegex(operator, sentence):
+    regex1 = re.compile(fr'\d*\{operator}')
+    mo = regex1.search(sentence)
+    part1 = mo.group()[:len(mo.group())-1]
+    regex2 = re.compile(fr'\{operator}\d*')
+    mo = regex2.search(sentence)
+    part2 = mo.group()[1:]
 
-    return [init, final]
+    return [part1, part2, part1 + operator + part2]
 
 
-# Computes all operation on the sentence
+# Computes all operations on the sentence
 def operations(sentence):
     while '^' in sentence:
-        coordinates = operationFinder('^', sentence)
-        init = coordinates[0]
-        final = coordinates[1]
-        power = float(sentence[init:sentence.index('^')]) ** float(sentence[sentence.index('^') + 1:final + 1])
+        regex = findRegex('^', sentence)
+        power1 = regex[0]
+        power2 = regex[1]
+
+        power = float(power1) ** float(power2)
 
         if not str(power).isdecimal():
             power = int(power)
 
-        sentence = sentence.split(sentence[init:final + 1])
+        sentence = sentence.split(regex[2])
         sentence = str(power).join(sentence)
-        print(sentence)
 
     while '*' in sentence or '/' in sentence:
         if '*' in sentence and ('/' not in sentence or sentence.index('*') < sentence.index('/')):
-            coordinates = operationFinder('*', sentence)
-            init = coordinates[0]
-            final = coordinates[1]
-            mult = float(sentence[init:sentence.index('*')]) * float(sentence[sentence.index('*') + 1:final])
+            regex = findRegex('*', sentence)
+            mult1 = regex[0]
+            mult2 = regex[1]
+
+            mult = float(mult1) * float(mult2)
 
             if not str(mult).isdecimal():
                 mult = int(mult)
 
-            sentence = sentence.split(sentence[init:final])
+            sentence = sentence.split(regex[2])
             sentence = str(mult).join(sentence)
-            print(sentence)
         else:
-            coordinates = operationFinder('/', sentence)
-            init = coordinates[0]
-            final = coordinates[1]
-            div = float(sentence[init:sentence.index('/')]) / float(sentence[sentence.index('/') + 1:final])
+            regex = findRegex('/', sentence)
+            div1 = regex[0]
+            div2 = regex[1]
+
+            div = float(div1) / float(div2)
 
             if not str(div).isdecimal():
                 div = int(div)
 
-            sentence = sentence.split(sentence[init:final])
+            sentence = sentence.split(regex[2])
             sentence = str(div).join(sentence)
-            print(sentence)
+    return sentence
 
 
 # Separates the sentence blocks and calculates each one in the right order
@@ -110,4 +110,4 @@ layout = [
 
 calculatorGUI = sg.Window('PICAlculator 3000', layout, size=(390, 500))
 # calculatorGUI.read()
-print(operations('44/22*22'))
+print(operations('2*2/2^2'))
