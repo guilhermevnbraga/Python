@@ -78,7 +78,7 @@ def operations(sentence):
     return sentence
 
 
-# Separates the sentence blocks and calculates each one in the right order
+# Separates the sentence blocks and computes each one in the right order
 def calculator(sentence):
     while '(' in sentence and ')' in sentence:
         sentence2 = sentence
@@ -96,7 +96,12 @@ def calculator(sentence):
                     final = c
                     break
 
-            sentence2 = sentence2[init + 1:final]
+            sentence2 = sentence2[init + 1:final]            
+        result = operations(sentence2)
+        sentence = sentence.split('(' + sentence2 + ')')
+        sentence = result.join(sentence)
+    sentence = operations(sentence)
+    return sentence
 
 
 sg.theme('DarkGreen3')
