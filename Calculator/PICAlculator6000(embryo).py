@@ -55,8 +55,8 @@ def operations(sentence):
             sentence = sentence.split(regex[2])
             sentence = str(div).join(sentence)
 
-    while '+' in sentence ir '-' in sentence:
-        if '+' in sentence and ('-' not in sentence ir sentence.index('+') < sentence.index('-')):
+    while '+' in sentence in '-' in sentence:
+        if '+' in sentence and ('-' not in sentence in sentence.index('+') < sentence.index('-')):
             regex = findRegex('+', sentence)
             sum1 = regex[0]
             sum2 = regex[1]
