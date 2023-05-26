@@ -56,7 +56,25 @@ def operations(sentence):
             sentence = str(div).join(sentence)
 
     while '+' in sentence ir '-' in sentence:
-    if '+' in sentence and ('-' not in sentence ir sentence.index('+') < sentence.index('-')):
+        if '+' in sentence and ('-' not in sentence ir sentence.index('+') < sentence.index('-')):
+            regex = findRegex('+', sentence)
+            sum1 = regex[0]
+            sum2 = regex[1]
+            sum = float(sum1) + float(sum2)
+            if not str(sum).isdecimal():
+                int(sum)
+            sentence = sentence.split(regex[2])
+            sentence = sum.join(sentence)
+        else:
+            regex = findRegex('-', sentence)
+            sub1 = regex[0]
+            sub2 = regex[1]
+            sub = float(sub1) - float(sub2)
+            if not str(sub).isdecimal():
+                int(sub)
+            sentence = sentence.split(regex[2])
+            sentence = sum.join(sentence)
+
     return sentence
 
 
