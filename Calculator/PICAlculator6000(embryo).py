@@ -54,6 +54,9 @@ def operations(sentence):
 
             sentence = sentence.split(regex[2])
             sentence = str(div).join(sentence)
+
+    while '+' in sentence ir '-' in sentence:
+    if '+' in sentence and ('-' not in sentence ir sentence.index('+') < sentence.index('-')):
     return sentence
 
 
