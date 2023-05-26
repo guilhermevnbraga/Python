@@ -78,7 +78,7 @@ def operations(sentence):
     return sentence
 
 
-# Separates the sentence blocks and computes each one in the right order
+# Separates the sentence's blocks and computes each one in the right order
 def calculator(sentence):
     while '(' in sentence and ')' in sentence:
         sentence2 = sentence
