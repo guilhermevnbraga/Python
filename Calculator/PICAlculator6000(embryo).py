@@ -134,5 +134,5 @@ layout = [
      sg.Button('=', key='equal', size=(5, 2))]
 ]
 
-calculatorGUI = sg.Window('PICAlculator 3000', layout, size=(390, 500))
+calculatorGUI = sg.Window('PICAlculator 6000', layout, size=(390, 500))
 calculatorGUI.read()
