@@ -3,7 +3,7 @@ import re
 
 
 # Find the desired operation with regex
-def findRegex(operator, sentence):
+def findregex(operator, sentence):
     regex1 = re.compile(fr'\d*\{operator}')
     mo = regex1.search(sentence)
     part1 = mo.group()[:len(mo.group())-1]
@@ -13,11 +13,25 @@ def findRegex(operator, sentence):
 
     return [part1, part2, part1 + operator + part2]
 
+def isnegative(sentence):
+    try:
+        negativeRegex = re.compile(fr'^-\d*')
+        mo = negativeRegex.search(sentence)
+        mo.group()
+    except AttributeError:
+        return False
+    return True
+
+
+def minxmin(sentence):
+    minRegex = re.compile('--')
+    return minRegex.sub('+', sentence)
+
 
 # Computes all operations on the sentence
 def operations(sentence):
     while '^' in sentence:
-        regex = findRegex('^', sentence)
+        regex = findregex('^', sentence)
         power1 = regex[0]
         power2 = regex[1]
 
@@ -28,10 +42,11 @@ def operations(sentence):
 
         sentence = sentence.split(regex[2])
         sentence = str(power).join(sentence)
+        print(sentence)
 
     while '*' in sentence or '/' in sentence:
         if '*' in sentence and ('/' not in sentence or sentence.index('*') < sentence.index('/')):
-            regex = findRegex('*', sentence)
+            regex = findregex('*', sentence)
             mult1 = regex[0]
             mult2 = regex[1]
 
@@ -43,7 +58,7 @@ def operations(sentence):
             sentence = sentence.split(regex[2])
             sentence = str(mult).join(sentence)
         else:
-            regex = findRegex('/', sentence)
+            regex = findregex('/', sentence)
             div1 = regex[0]
             div2 = regex[1]
 
@@ -54,52 +69,58 @@ def operations(sentence):
 
             sentence = sentence.split(regex[2])
             sentence = str(div).join(sentence)
+        print(sentence)
 
-    while '+' in sentence in '-' in sentence:
-        if '+' in sentence and ('-' not in sentence in sentence.index('+') < sentence.index('-')):
-            regex = findRegex('+', sentence)
-            sum1 = regex[0]
-            sum2 = regex[1]
-            sum = float(sum1) + float(sum2)
-            if not str(sum).isdecimal():
-                int(sum)
+    while '+' in sentence or '-' in sentence:
+        if isnegative(sentence):
+            break
+
+        if '+' in sentence and ('-' not in sentence or sentence.index('+') < sentence.index('-')):
+            regex = findregex('+', sentence)
+            su1 = regex[0]
+            su2 = regex[1]
+
+            su = float(su1) + float(su2)
+
+            if not str(su).isdecimal():
+                su = int(su)
+
             sentence = sentence.split(regex[2])
-            sentence = sum.join(sentence)
+            sentence = str(su).join(sentence)
         else:
-            regex = findRegex('-', sentence)
+            regex = findregex('-', sentence)
             sub1 = regex[0]
             sub2 = regex[1]
+
             sub = float(sub1) - float(sub2)
+
             if not str(sub).isdecimal():
-                int(sub)
+                sub = int(sub)
+
             sentence = sentence.split(regex[2])
-            sentence = sum.join(sentence)
+            sentence = str(sub).join(sentence)
+        print(sentence)
 
     return sentence
 
 
 # Separates the sentence's blocks and computes each one in the right order
 def calculator(sentence):
+    parRegex = re.compile(r'\(.*\)')
+    print(sentence)
+
     while '(' in sentence and ')' in sentence:
         sentence2 = sentence
         while '(' in sentence2 and ')' in sentence2:
-            init = sentence2.index('(')
-            par1 = 0
-            par2 = 0
-
-            for c in range(len(sentence2)):
-                if sentence2[c] == '(':
-                    par1 += 1
-                elif sentence2[c] == ')':
-                    par2 += 1
-                if par1 == par2 and par1 != 0:
-                    final = c
-                    break
-
-            sentence2 = sentence2[init + 1:final]            
+            mo = parRegex.search(sentence2)
+            par = mo.group()
+            sentence2 = par[1:len(par)-1]
+            print(sentence2)
         result = operations(sentence2)
         sentence = sentence.split('(' + sentence2 + ')')
         sentence = result.join(sentence)
+        sentence = minxmin(sentence)
+
     sentence = operations(sentence)
     return sentence
 
@@ -135,5 +156,5 @@ layout = [
 ]
 
 calculatorGUI = sg.Window('PICAlculator 6000', layout, size=(390, 500))
-while True:
-    events, values = calculatorGUI.read()
+events, values = calculatorGUI.read()
+print(calculator('24^2+2^2-(2-1*(2+1*2))*6/3'))
