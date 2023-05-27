@@ -4,18 +4,25 @@ import re
 
 # Find the desired operation with regex
 def findregex(operator, sentence):
+    extraMinus = ''
+    if sentence.startswith('-'):
+        extraMinus = '-'
+        sentence = sentence[1:]
+
     regex1 = re.compile(fr'\d*\{operator}')
     mo = regex1.search(sentence)
-    part1 = mo.group()[:len(mo.group())-1]
+    part1 = extraMinus + mo.group()[:len(mo.group())-1]
     regex2 = re.compile(fr'\{operator}\d*')
     mo = regex2.search(sentence)
     part2 = mo.group()[1:]
 
     return [part1, part2, part1 + operator + part2]
 
+
+# verify if there's only a negative number on the sentence
 def isnegative(sentence):
     try:
-        negativeRegex = re.compile(fr'^-\d*')
+        negativeRegex = re.compile(fr'^-\d*$')
         mo = negativeRegex.search(sentence)
         mo.group()
     except AttributeError:
@@ -23,6 +30,7 @@ def isnegative(sentence):
     return True
 
 
+# simulate minus times minus equals plus
 def minxmin(sentence):
     minRegex = re.compile('--')
     return minRegex.sub('+', sentence)
@@ -75,7 +83,7 @@ def operations(sentence):
         if isnegative(sentence):
             break
 
-        if '+' in sentence and ('-' not in sentence or sentence.index('+') < sentence.index('-')):
+        if '+' in sentence and ('-' not in sentence[1:] or sentence.index('+') < sentence[1:].index('-')):
             regex = findregex('+', sentence)
             su1 = regex[0]
             su2 = regex[1]
@@ -91,7 +99,7 @@ def operations(sentence):
             regex = findregex('-', sentence)
             sub1 = regex[0]
             sub2 = regex[1]
-
+            print(regex[2])
             sub = float(sub1) - float(sub2)
 
             if not str(sub).isdecimal():
@@ -157,4 +165,3 @@ layout = [
 
 calculatorGUI = sg.Window('PICAlculator 6000', layout, size=(390, 500))
 events, values = calculatorGUI.read()
-print(calculator('24^2+2^2-(2-1*(2+1*2))*6/3'))
