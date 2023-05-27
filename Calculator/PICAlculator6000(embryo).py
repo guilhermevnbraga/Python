@@ -9,10 +9,10 @@ def findregex(operator, sentence):
         extraMinus = '-'
         sentence = sentence[1:]
 
-    regex1 = re.compile(fr'\d*\{operator}')
+    regex1 = re.compile(fr'\d*\.?\d?\{operator}')
     mo = regex1.search(sentence)
     part1 = extraMinus + mo.group()[:len(mo.group())-1]
-    regex2 = re.compile(fr'\{operator}\d*')
+    regex2 = re.compile(fr'\{operator}\d*\.?\d?')
     mo = regex2.search(sentence)
     part2 = mo.group()[1:]
 
@@ -139,7 +139,7 @@ layout = [
      sg.Button('⚙', key='settings', size=(2, 1))],
     [sg.Text('')],
     [sg.Text(size=(300, 1), key='num2', justification='r')],
-    [sg.Text('0', size=(300, 3), justification='r', key='num')],
+    [sg.Text('0', size=(300, 3), justification='r', key='display')],
     [sg.Button('MS', key='memoryStore', size=(5, 2), ), sg.Button('MR', key='memoryRestore', size=(5, 2)),
      sg.Button('M+', key='memorySum', size=(5, 2)), sg.Button('M-', key='memorySub', size=(5, 2)),
      sg.Button('C', key='clear', size=(5, 2))],
@@ -164,4 +164,66 @@ layout = [
 ]
 
 calculatorGUI = sg.Window('PICAlculator 6000', layout, size=(390, 500))
-events, values = calculatorGUI.read()
+sentence = ''
+memory = 0
+while True:
+    events, values = calculatorGUI.read()
+    if events == 'clear':
+        sentence = ''
+    elif events == 'memoryStore':
+        memory = float(sentence)
+    elif events == 'memoryRestore':
+        if not str(memory).isdecimal():
+            memory = int(memory)
+        sentence += str(memory)
+    elif events == 'memorySum':
+        memory += float(memory)
+    elif events == 'memorySub':
+        memory -= float(memory)
+    elif events == 'zero':
+        sentence += '0'
+    elif events == 'one':
+        sentence += '1'
+    elif events == 'two':
+        sentence += '2'
+    elif events == 'three':
+        sentence += '3'
+    elif events == 'four':
+        sentence += '4'
+    elif events == 'five':
+        sentence += '5'
+    elif events == 'six':
+        sentence += '6'
+    elif events == 'seven':
+        sentence += '7'
+    elif events == 'eight':
+        sentence += '8'
+    elif events == 'nine':
+        sentence += '9'
+    elif events == 'plus':
+        sentence += '+'
+    elif events == 'minus':
+        sentence += '-'
+    elif events == 'mult':
+        sentence += '*'
+    elif events == 'div':
+        sentence += '/'
+    elif events == 'par1':
+        sentence += '('
+    elif events == 'par2':
+        sentence += ')'
+    elif events == 'point':
+        dotRegex = re.compile(r'\d*\.?\d*$')
+        mo = dotRegex.search(sentence)
+        if '.' not in mo.group():
+            sentence += '.'
+    elif events == 'equal':
+        sentence = calculator(sentence)
+    elif events == sg.WINDOW_CLOSED:
+        break
+
+    if sentence == '':
+        calculatorGUI['display'].update('0')
+        continue
+
+    calculatorGUI['display'].update(sentence)
