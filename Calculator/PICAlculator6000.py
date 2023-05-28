@@ -1,8 +1,34 @@
 import PySimpleGUI as sg
 import re
+import math
 
 
 # Find the desired operation with regex
+# verify if there's only a negative number on the sentence
+def isnegative(sentence):
+    try:
+        negativeRegex = re.compile(fr'^-\d*$')
+        mo = negativeRegex.search(sentence)
+        mo.group()
+    except AttributeError:
+        return False
+    return True
+
+
+# replace duplicate signs
+def signreplace(sentence):
+    if '--' in sentence:
+        sentence = sentence.replace('--', '+')
+    if '++' in sentence:
+        sentence = sentence.replace('++', '+')
+    if '+-' in sentence:
+        sentence = sentence.replace('+-', '-')
+    if '-+' in sentence:
+        sentence = sentence.replace('-+', '-')
+
+    return sentence
+
+
 def findregex(operator, sentence):
     extraMinus = ''
     if sentence.startswith('-'):
@@ -19,38 +45,55 @@ def findregex(operator, sentence):
     return [part1, part2, part1 + operator + part2]
 
 
-# verify if there's only a negative number on the sentence
-def isnegative(sentence):
+# Verify if the sentence isn't illegal
+def validatesentence(sentence):
+    if sentence.count('(') != sentence.count(')'):
+        sentence = 'Syntax Error!'
+
+    errorRegex = re.compile(r'[*/]{2,}')
+    mo = errorRegex.search(sentence)
     try:
-        negativeRegex = re.compile(fr'^-\d*$')
-        mo = negativeRegex.search(sentence)
         mo.group()
+        sentence = 'Syntax Error!'
     except AttributeError:
-        return False
-    return True
-
-
-# simulate minus times minus equals plus
-def minxmin(sentence):
-    minRegex = re.compile('--')
-    return minRegex.sub('+', sentence)
+        return sentence
+    return sentence
 
 
 # Computes all operations on the sentence
 def operations(sentence):
-    while '^' in sentence:
-        regex = findregex('^', sentence)
-        power1 = regex[0]
-        power2 = regex[1]
-
-        power = float(power1) ** float(power2)
-
-        if not str(power).isdecimal():
-            power = int(power)
-
-        sentence = sentence.split(regex[2])
-        sentence = str(power).join(sentence)
+    while '!' in sentence:
+        factorialRegex = re.compile(r'\d\.?\d?!')
+        mo = factorialRegex.search(sentence)
+        factorial = mo.group()
+        factorial = factorial.replace('!', '')
+        print(factorial)
+        fact = math.factorial(int(factorial))
+        sentence = sentence.replace(str(factorial) + '!', str(fact))
         print(sentence)
+
+    while '^' in sentence or '√':
+        if '^' in sentence and ('√' not in sentence or sentence.index('^') < sentence.index('√')):
+            regex = findregex('^', sentence)
+            power1 = regex[0]
+            power2 = regex[1]
+
+            power = float(power1) ** float(power2)
+
+            if not str(power).isdecimal():
+                power = int(power)
+
+            sentence = sentence.split(regex[2])
+            sentence = str(power).join(sentence)
+            print(sentence)
+        else:
+            sqrtRegex = re.compile(r'√\d*')
+            mo = sqrtRegex.search(sentence)
+            square = mo.group()
+            root = math.sqrt(float(square[1:]))
+            if not str(root).isdecimal():
+                root = int(root)
+            sentence = sentence.replace(square, str(root))
 
     while '*' in sentence or '/' in sentence:
         if '*' in sentence and ('/' not in sentence or sentence.index('*') < sentence.index('/')):
@@ -115,6 +158,7 @@ def operations(sentence):
 # Separates the sentence's blocks and computes each one in the right order
 def calculator(sentence):
     parRegex = re.compile(r'\(.*\)')
+    sentence = signreplace(sentence)
     print(sentence)
 
     while '(' in sentence and ')' in sentence:
@@ -127,7 +171,6 @@ def calculator(sentence):
         result = operations(sentence2)
         sentence = sentence.split('(' + sentence2 + ')')
         sentence = result.join(sentence)
-        sentence = minxmin(sentence)
 
     sentence = operations(sentence)
     return sentence
@@ -149,7 +192,7 @@ layout = [
     [sg.Button('π', key='pi', size=(5, 2)), sg.Button('(', key='par1', size=(5, 2)),
      sg.Button(')', key='par2', size=(5, 2)), sg.Button('x!', key='factorial', size=(5, 2)),
      sg.Button('/', key='div', size=(5, 2))],
-    [sg.Button('x^y', key='pot_x', size=(5, 2)), sg.Button('7', key='seven', size=(5, 2)),
+    [sg.Button('x^y', key='potx', size=(5, 2)), sg.Button('7', key='seven', size=(5, 2)),
      sg.Button('8', key='eight', size=(5, 2)), sg.Button('9', key='nine', size=(5, 2)),
      sg.Button('X', key='mult', size=(5, 2))],
     [sg.Button('10^x', key='tenPot', size=(5, 2)), sg.Button('4', key='four', size=(5, 2)),
@@ -208,6 +251,12 @@ while True:
         sentence += '*'
     elif events == 'div':
         sentence += '/'
+    elif events == 'potx':
+        sentence += '^'
+    elif events == 'squareRoot':
+        sentence += '√'
+    elif events == 'factorial':
+        sentence += '!'
     elif events == 'par1':
         sentence += '('
     elif events == 'par2':
@@ -217,8 +266,55 @@ while True:
         mo = dotRegex.search(sentence)
         if '.' not in mo.group():
             sentence += '.'
+    elif events == 'tenPot':
+        operationRegex = re.compile(r'[+-/*]\d*')
+        operate = operationRegex.findall(sentence)
+        if not operate:
+            sentence = '10^' + sentence
+        else:
+            operate = ''.join(operate[-1])
+            newOperation = operate
+            newOperation = newOperation.replace(newOperation[1:], '10^'+newOperation[1:])
+            sentence = sentence.replace(operate, newOperation)
+    elif events == 'log':
+        if sentence.isnumeric():
+            sentence = round(math.log10(float(sentence)), 5)
+        sentence = str(sentence);
+    elif events == 'sin':
+        if sentence.isnumeric():
+            sentence = round(math.sin(math.radians(float(sentence))), 3)
+        sentence = str(sentence)
+    elif events == 'cos':
+        if sentence.isnumeric():
+            sentence = round(math.cos(math.radians(float(sentence))), 3)
+        sentence = str(sentence)
+    elif events == 'tan':
+        if sentence.isnumeric():
+            sentence = round(math.tan(math.radians(float(sentence))), 3)
+        sentence = str(sentence)
+    elif events == 'potwo':
+        sentence += '^2'
+    elif events == 'pi':
+        sentence += '3.1415926535897932384626433832795'
+    elif events == 'inverter':
+        sentence = validatesentence(sentence)
+        if sentence != 'Syntax Error!':
+            sentence = calculator(sentence)
+        if sentence != '0' and sentence != 'Syntax Error!' and sentence != '':
+            if '-' in sentence:
+                sentence = sentence.replace('-', '')
+            else:
+                sentence = '-' + sentence
+    elif events == 'modelX':
+        sentence = validatesentence(sentence)
+        if sentence != 'Syntax Error!':
+            sentence = calculator(sentence)
+            if '-' in sentence:
+                sentence = sentence.replace('-', '')
     elif events == 'equal':
-        sentence = calculator(sentence)
+        sentence = validatesentence(sentence)
+        if sentence != 'Syntax Error!':
+            sentence = calculator(sentence)
     elif events == sg.WINDOW_CLOSED:
         break
 
