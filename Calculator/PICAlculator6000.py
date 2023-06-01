@@ -2,7 +2,6 @@ import PySimpleGUI as sg
 import re
 import math
 
-
 # Find the desired operation with regex
 # verify if there's only a negative number on the sentence
 def isnegative(sentence):
@@ -80,7 +79,7 @@ def operations(sentence):
 
             power = float(power1) ** float(power2)
 
-            if not str(power).isdecimal():
+            if '.' not in power:
                 power = int(power)
 
             sentence = sentence.split(regex[2])
@@ -91,7 +90,7 @@ def operations(sentence):
             mo = sqrtRegex.search(sentence)
             square = mo.group()
             root = math.sqrt(float(square[1:]))
-            if not str(root).isdecimal():
+            if '.' not in root:
                 root = int(root)
             sentence = sentence.replace(square, str(root))
 
@@ -103,7 +102,7 @@ def operations(sentence):
 
             mult = float(mult1) * float(mult2)
 
-            if not str(mult).isdecimal():
+            if '.' not in mult:
                 mult = int(mult)
 
             sentence = sentence.split(regex[2])
@@ -115,7 +114,7 @@ def operations(sentence):
 
             div = float(div1) / float(div2)
 
-            if not str(div).isdecimal():
+            if '.' not in div:
                 div = int(div)
 
             sentence = sentence.split(regex[2])
@@ -133,7 +132,7 @@ def operations(sentence):
 
             su = float(su1) + float(su2)
 
-            if not str(su).isdecimal():
+            if '.' not in su:
                 su = int(su)
 
             sentence = sentence.split(regex[2])
@@ -145,7 +144,7 @@ def operations(sentence):
             print(regex[2])
             sub = float(sub1) - float(sub2)
 
-            if not str(sub).isdecimal():
+            if '.' not in sub:
                 sub = int(sub)
 
             sentence = sentence.split(regex[2])
@@ -279,18 +278,24 @@ while True:
     elif events == 'log':
         if sentence.isnumeric():
             sentence = round(math.log10(float(sentence)), 5)
-        sentence = str(sentence);
+        sentence = str(sentence)
     elif events == 'sin':
         if sentence.isnumeric():
             sentence = round(math.sin(math.radians(float(sentence))), 3)
+            if '.' not in str(sentence):
+                int(sentence)
         sentence = str(sentence)
     elif events == 'cos':
         if sentence.isnumeric():
             sentence = round(math.cos(math.radians(float(sentence))), 3)
+            if '.' not in str(sentence):
+                int(sentence)
         sentence = str(sentence)
     elif events == 'tan':
         if sentence.isnumeric():
             sentence = round(math.tan(math.radians(float(sentence))), 3)
+            if '.' not in str(sentence):
+                int(sentence)
         sentence = str(sentence)
     elif events == 'potwo':
         sentence += '^2'
