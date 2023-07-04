@@ -24,13 +24,13 @@ def caixaTexto(resultado, img, cor = [255, 100, 0]):
     return x, y, img
 
 
-img = cv2.imread('./OCRPython/Imagens/teste02.jpg')
+img = cv2.imread('/home/solas/PycharmProjects/killerQueen/ComputerVision/OCRPython/Imagens/teste02.jpg')
 rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 config_tesseract = '--tessdata-dir tessdata'
 resultado = pytesseract.image_to_data(rgb, config=config_tesseract, lang='por', output_type=Output.DICT)
 minConf = 40
 imgCopia = rgb.copy()
-fonte = './OCRPython/Fontes/calibri.ttf'
+fonte = '/home/solas/PycharmProjects/killerQueen/ComputerVision/OCRPython/Fontes/calibri.ttf'
 for i in range(0, len(resultado['text'])):
                confianca = int(resultado['conf'][i])
                if confianca > minConf:
