@@ -6,7 +6,7 @@ import math
 # verify if there's only a negative number on the sentence
 def isnegative(sentence):
     try:
-        negativeRegex = re.compile(fr'^-\d*$')
+        negativeRegex = re.compile(fr'^-\d*[.]?\d*$')
         mo = negativeRegex.search(sentence)
         mo.group()
     except AttributeError:
@@ -71,7 +71,7 @@ def operations(sentence):
         sentence = sentence.replace(str(factorial) + '!', str(fact))
         print(sentence)
 
-    while '^' in sentence or '√':
+    while '^' in sentence or '√' in sentence:
         if '^' in sentence and ('√' not in sentence or sentence.index('^') < sentence.index('√')):
             regex = findregex('^', sentence)
             power1 = regex[0]
@@ -79,7 +79,7 @@ def operations(sentence):
 
             power = float(power1) ** float(power2)
 
-            if '.' not in power:
+            if power == int(power):
                 power = int(power)
 
             sentence = sentence.split(regex[2])
@@ -90,7 +90,7 @@ def operations(sentence):
             mo = sqrtRegex.search(sentence)
             square = mo.group()
             root = math.sqrt(float(square[1:]))
-            if '.' not in root:
+            if root == int(root):
                 root = int(root)
             sentence = sentence.replace(square, str(root))
 
@@ -102,7 +102,7 @@ def operations(sentence):
 
             mult = float(mult1) * float(mult2)
 
-            if '.' not in mult:
+            if mult == int(mult):
                 mult = int(mult)
 
             sentence = sentence.split(regex[2])
@@ -114,14 +114,14 @@ def operations(sentence):
 
             div = float(div1) / float(div2)
 
-            if '.' not in div:
+            if div == int(div):
                 div = int(div)
 
             sentence = sentence.split(regex[2])
             sentence = str(div).join(sentence)
         print(sentence)
 
-    while '+' in sentence or '-' in sentence:
+    while '+' in sentence or ('-' in sentence and not isnegative(sentence)):
         if isnegative(sentence):
             break
 
@@ -132,7 +132,7 @@ def operations(sentence):
 
             su = float(su1) + float(su2)
 
-            if '.' not in su:
+            if su == int(su):
                 su = int(su)
 
             sentence = sentence.split(regex[2])
@@ -144,7 +144,7 @@ def operations(sentence):
             print(regex[2])
             sub = float(sub1) - float(sub2)
 
-            if '.' not in sub:
+            if sub == int(sub):
                 sub = int(sub)
 
             sentence = sentence.split(regex[2])
