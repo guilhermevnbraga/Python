@@ -8,3 +8,7 @@ rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 tessdataDir = r'C:\Users\PESSOAL\Documents\GitHub\Python\ComputerVision\OCRPython\tessdata'
 configTesseract = f'--tessdata-dir "{tessdataDir}"'
 resultado = pytesseract.image_to_data(rgb, config=configTesseract, lang='por', output_type=Output.DICT)
+print(resultado)
+cv2.imshow('imagem', rgb)
+cv2.waitKey(0)
+cv2.destroyAllWindows()

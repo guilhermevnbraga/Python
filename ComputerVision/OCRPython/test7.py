@@ -24,10 +24,11 @@ def caixaTexto(resultado, img, cor = [255, 100, 0]):
     return x, y, img
 
 
-img = cv2.imread(r'.\Imagens\teste02.jpg')
+img = cv2.imread(r'C:\Users\PESSOAL\Documents\GitHub\Python\ComputerVision\OCRPython\Imagens\teste02.jpg')
 rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-config_tesseract = '--tessdata-dir tessdata'
-resultado = pytesseract.image_to_data(rgb, config=config_tesseract, lang='por', output_type=Output.DICT)
+tessdataDir = r'C:\Users\PESSOAL\Documents\GitHub\Python\ComputerVision\OCRPython\tessdata'
+configTesseract = f'--tessdata-dir "{tessdataDir}"'
+resultado = pytesseract.image_to_data(rgb, config=configTesseract, lang='por', output_type=Output.DICT)
 minConf = 40
 imgCopia = rgb.copy()
 fonte = r'\Fontes\calibri.ttf'
@@ -38,3 +39,5 @@ for i in range(0, len(resultado['text'])):
                    texto = resultado['text'][i]
                    imgCopia = escrevaTexto(texto, x, y, imgCopia, fonte)
 cv2.imshow('imagem', imgCopia)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
