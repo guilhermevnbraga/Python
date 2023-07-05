@@ -41,6 +41,4 @@ for i in range(0, len(resultado['text'])):
 cv2.imshow('imagem', imgCopia)
 cv2.waitKey(0)
 cv2.destroyAllWindows
-print(resultado['conf'])
-print(resultado['text'])
  
