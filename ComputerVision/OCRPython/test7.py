@@ -31,7 +31,7 @@ configTesseract = f'--tessdata-dir "{tessdataDir}"'
 resultado = pytesseract.image_to_data(rgb, config=configTesseract, lang='por', output_type=Output.DICT)
 minConf = 40
 imgCopia = rgb.copy()
-fonte = r'\Fontes\calibri.ttf'
+fonte = r'C:\Users\PESSOAL\Documents\GitHub\Python\ComputerVision\OCRPython\Fontes\calibri.ttf'
 for i in range(0, len(resultado['text'])):
                confianca = int(resultado['conf'][i])
                if confianca > minConf:
