@@ -29,7 +29,7 @@ rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 tessdataDir = r'C:\Users\PESSOAL\Documents\GitHub\Python\ComputerVision\OCRPython\tessdata'
 configTesseract = f'--tessdata-dir "{tessdataDir}"'
 resultado = pytesseract.image_to_data(rgb, config=configTesseract, lang='por', output_type=Output.DICT)
-dateRegex = r'^(0[1-9]|[12][0-9]|3[01])?/?(0[1-9]|1[012])/(19|20)\d\d$'
+dateRegex = r'^(0[1-9]/|[12][0-9]/|3[01]/)?(0[1-9]|1[012])/(19|20)\d\d$'
 dates = []
 fonte = r'C:\Users\PESSOAL\Documents\GitHub\Python\ComputerVision\OCRPython\Fontes\calibri.ttf'
 imgCopia = rgb.copy()
