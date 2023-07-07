@@ -1,22 +1,31 @@
 import cv2
 import pytesseract
+import numpy as np
 
 img = cv2.imread(r'C:\Users\PESSOAL\Documents\GitHub\Python\ComputerVision\OCRPython\Imagens\livro02.jpg')
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 img2 = cv2.imread(r'C:\Users\PESSOAL\Documents\GitHub\Python\ComputerVision\OCRPython\Imagens\receita01.jpg')
 gray2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
 
+cv2.imshow('imagem', gray)
+cv2.waitKey(0)
+cv2.imshow('imagem', gray2)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
 tessdataDir = r'C:\Users\PESSOAL\Documents\GitHub\Python\ComputerVision\OCRPython\tessdata'
-configTesseract = f'--tessdata-dir "{tessdataDir}"'
+configTesseract = f'--tessdata-dir "{tessdataDir}" --psm 6'
 
-val, otsu = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+otsu = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 9)
+erode = cv2.erode(otsu, np.ones((2, 2), np.uint8))
 cv2.imshow('imagem', otsu)
+cv2.waitKey(0)
+cv2.imshow('imagem', erode)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 texto = pytesseract.image_to_string(otsu, lang='por', config=configTesseract)
 print(texto)
 
-val, thresh = cv2.threshold(gray2, 140, 255, cv2.THRESH_BINARY)
+thresh = cv2.adaptiveThreshold(gray2, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 9)
 cv2.imshow('imagem', thresh)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
