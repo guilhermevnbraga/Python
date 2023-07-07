@@ -79,7 +79,7 @@ for (inicioX, inicioY, fimX, fimY) in deteccoes:
   fimX = int(fimX * proporcaoW)
   fimY = int(fimY * proporcaoH)
 
-  # region of interest
+  # roi -> region of interest
   roi = copia[inicioY-margem:fimY+margem, inicioX-margem:fimX+margem]
 
   cv2.rectangle(original, (inicioX-margem, inicioY-margem), (fimX+margem, fimY+margem), (0,255,0), 2)
