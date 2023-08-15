@@ -3,7 +3,7 @@ import re
 import math
 
 # Find the desired operation with regex
-# verify if there's only a negative number on the sentence
+# Verify if there's only a negative number on the sentence
 def isnegative(sentence):
     try:
         negativeRegex = re.compile(fr'^-\d*[.]?\d*$')
@@ -14,7 +14,7 @@ def isnegative(sentence):
     return True
 
 
-# replace duplicate signs
+# Replace duplicate signs
 def signreplace(sentence):
     if '--' in sentence:
         sentence = sentence.replace('--', '+')
@@ -49,11 +49,6 @@ def validatesentence(sentence):
     if sentence.count('(') != sentence.count(')'):
         sentence = 'Syntax Error!'
 
-    errorRegex = re.compile(r'[*/]{2,}')
-    mo = errorRegex.search(sentence)
-    try:
-        mo.group()
-        sentence = 'Syntax Error!'
     except AttributeError:
         return sentence
     return sentence
@@ -243,19 +238,44 @@ while True:
     elif events == 'nine':
         sentence += '9'
     elif events == 'plus':
-        sentence += '+'
+        if sentence[-1].isnumeric():
+            sentence += '+'
+        elif sentence[-1] in '-*/^√':
+            sentence = sentence[0:-1]
+            sentence += '+'
     elif events == 'minus':
-        sentence += '-'
+        if sentence[-1].isnumeric():
+            sentence += '-'
+        elif sentence[-1] in '+*/^√':
+            sentence = sentence[0:-1]
+            sentence += '-'
     elif events == 'mult':
-        sentence += '*'
+        if sentence[-1].isnumeric():
+            sentence += '*'
+        elif sentence[-1] in '+-/^√':
+            sentence = sentence[0:-1]
+            sentence += '*'
     elif events == 'div':
-        sentence += '/'
+        if sentence[-1].isnumeric():
+            sentence += '/'
+        elif sentence[-1] in '+*-^√':
+            sentence = sentence[0:-1]
+            sentence += '/'
     elif events == 'potx':
-        sentence += '^'
+        if setence[-1].isnumeric():
+            sentence += '^'
+        elif sentence[-1] in '+*-/√':
+            sentence = sentence[0:-1]
+            sentence += '^'
     elif events == 'squareRoot':
-        sentence += '√'
+        if sentence[-1].isnumeric():
+            sentence += '√'
+        elif sentence[-1] in '+*-/':
+            sentence = sentence[0:-1]
+            sentence += '√'
     elif events == 'factorial':
-        sentence += '!'
+        if sentence[-1].isnumeric():
+            sentence += '!'
     elif events == 'par1':
         sentence += '('
     elif events == 'par2':
