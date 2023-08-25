@@ -3,15 +3,23 @@ from os import chdir, makedirs
 from os.path import exists
 from time import sleep
 
+
+def rewrite():
+    db = open('db.txt', 'w')
+
+    for c in range(9):
+        weight = str(randint(-1000, 1000) / 1000)
+        if c < 8:
+            db.write(f'{weight}\n')
+        else:
+            db.write(weight)
+
+    db.close()
 if not exists('./Codes/db'):
     makedirs('./Codes/db')
 chdir('./Codes/db')
 
-db = open('db.txt', 'w')
-for c in range(9):
-    weight = str(randint(-1000, 1000) / 1000)
-    db.write(f'{weight}\n')
-db.close()
+rewrite()
 
 data = [
     '00',
@@ -27,49 +35,61 @@ waitedResult = [
     '1'
 ]
 
+euler = 2.718
+madeInHeaven = 0
 finalLayer = []
+lastResult = []
 while waitedResult != finalLayer:
     db = open('db.txt', 'r')
+    
+    try:
+        actualWeight = [float(a) for a in db.read().split('\n')]
+    except ValueError:
+        rewrite()
+        continue
 
-    actualData = []
-    out = ''
-    for x in db.read():
-        if x == '\n':
-            actualData.append(float(out))
-            out = ''
-        else:
-            out += x
     db.close()
 
-    euler = 2.718
+    if lastResult == finalLayer:
+        madeInHeaven += 1
+        print(madeInHeaven)
+    else:
+        madeInHeaven = 0
+
+    lastResult = finalLayer[:]
+    
+    if madeInHeaven == 1000:
+        rewrite()
+        madeInHeaven = 0
+
     firstLayer = []
-    out = []
+    sigmoids = []
     for x in data:
         for c in range(3):
-            summation = int(x[0]) * actualData[c] + int(x[1]) * actualData[c]
-            out.append(round(1/(1 + euler**(-summation)), 3))
+            summation = int(x[0]) * actualWeight[c] + int(x[1]) * actualWeight[c]
+            sigmoids.append(round(1/(1 + euler**(-summation)), 3))
 
-            if len(out) == 3:
-                firstLayer.append(out)
-                out = []
+            if len(sigmoids) == 3:
+                firstLayer.append(sigmoids)
+                sigmoids = []
                 
     finalLayer = []
     for x in firstLayer:
-        summation = float(x[0]) * actualData[6] + float(x[1]) * actualData[7] + float(x[2]) * actualData[8]
+        summation = float(x[0]) * actualWeight[6] + float(x[1]) * actualWeight[7] + float(x[2]) * actualWeight[8]
         finalLayer.append(round(1 / (1 + euler**(-summation)), 3))
 
     outDelta = []
     for c in range(len(finalLayer)):
         outDelta.append(round((float(waitedResult[c]) - finalLayer[c]) * (finalLayer[c] * (1 - finalLayer[c])), 3))
 
-    firstDelta = []
+    inDelta = []
     for c in range(len(outDelta)):
+
         delta = []
-
         for d in range(3):
-            delta.append(round(firstLayer[c][d] * actualData[6 + d] * outDelta[c], 3))
+            delta.append(round(firstLayer[c][d] * actualWeight[6 + d] * outDelta[c], 3))
 
-        firstDelta.append(delta)
+        inDelta.append(delta)
 
     firstPart = []
     for c in range(3):
@@ -80,9 +100,9 @@ while waitedResult != finalLayer:
         
         firstPart.append(round(sumPart, 3))
 
-    firstNewWeight = []
+    newOutWeight = []
     for c in range(3):
-        firstNewWeight.append(round(actualData[6 + c] + firstPart[c] * 0.3, 3))
+        newOutWeight.append(round(actualWeight[6 + c] + firstPart[c] * 0.3, 3))
 
     secondPart = []
     for w in range(2):
@@ -90,28 +110,33 @@ while waitedResult != finalLayer:
         for c in range(3):
             sumPart = 0
 
-            for d in range(len(firstDelta)):
-                sumPart += int(data[d][w]) * firstDelta[d][c]
+            for d in range(len(inDelta)):
+                sumPart += int(data[d][w]) * inDelta[d][c]
 
             firstPart.append(round(sumPart, 3))
         
         secondPart.append(firstPart)
 
-    secondNewWeight = []
+    newInWeight = []
     c = 0
     for d in range(3):
         for w in range(2):
-            weight = actualData[c] + secondPart[w][d] * 0.3
-            secondNewWeight.append(round(weight, 3))
+            weight = actualWeight[c] + secondPart[w][d] * 0.3
+            newInWeight.append(round(weight, 3))
             c += 1
 
-    for x in firstNewWeight:
-        secondNewWeight.append(x)
+    for x in newOutWeight:
+        newInWeight.append(x)
 
     db = open('db.txt', 'w')
-    for x in secondNewWeight:
-        db.write(f'{x}\n')
+
+    for x in newInWeight:
+        if not x == newInWeight[-1]:
+            db.write(f'{x}\n')
+        else:
+            db.write(f'{x}')
+
+    db.close()
 
     print(finalLayer)
-    sleep(0.01)
-        
+    sleep(0.05)
