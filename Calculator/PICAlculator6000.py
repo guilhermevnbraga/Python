@@ -34,10 +34,10 @@ def findregex(operator, sentence):
         extraMinus = '-'
         sentence = sentence[1:]
 
-    regex1 = re.compile(fr'\d*\.?\d?\{operator}')
+    regex1 = re.compile(fr'\d*(\.\d*)?\{operator}')
     mo = regex1.search(sentence)
     part1 = extraMinus + mo.group()[:len(mo.group())-1]
-    regex2 = re.compile(fr'\{operator}\d*\.?\d?')
+    regex2 = re.compile(fr'\{operator}\d*(\.\d*)?')
     mo = regex2.search(sentence)
     part2 = mo.group()[1:]
 
@@ -48,9 +48,6 @@ def findregex(operator, sentence):
 def validatesentence(sentence):
     if sentence.count('(') != sentence.count(')'):
         sentence = 'Syntax Error!'
-
-    except AttributeError:
-        return sentence
     return sentence
 
 
@@ -91,11 +88,19 @@ def operations(sentence):
 
     while '*' in sentence or '/' in sentence:
         if '*' in sentence and ('/' not in sentence or sentence.index('*') < sentence.index('/')):
+            ponto = 0
             regex = findregex('*', sentence)
+            if '.' in regex[0]:
+                ponto += len(regex[0][regex[0].index('.')+1:])
+                regex[0] = regex[0][:regex[0].index('.')] + regex[0][regex[0].index('.')+1:]
             mult1 = regex[0]
+
+            if '.' in regex[1]:
+                ponto += len(regex[1][regex[1].index('.')+1:])
+                regex[1] = regex[1][:regex[1].index('.')] + regex[1][regex[1].index('.')+1:]
             mult2 = regex[1]
 
-            mult = float(mult1) * float(mult2)
+            mult = float(mult1) * float(mult2) / (10**ponto)
 
             if mult == int(mult):
                 mult = int(mult)
@@ -103,11 +108,20 @@ def operations(sentence):
             sentence = sentence.split(regex[2])
             sentence = str(mult).join(sentence)
         else:
+            ponto = 0
             regex = findregex('/', sentence)
+            print(regex)
+            if '.' in regex[0]:
+                ponto += len(regex[0][regex[0].index('.')+1:])
+                regex[0] = regex[0][:regex[0].index('.')] + regex[0][regex[0].index('.')+1:]
             div1 = regex[0]
+
+            if '.' in regex[1]:
+                ponto -= len(regex[1][regex[1].index('.')+1:])
+                regex[1] = regex[1][:regex[1].index('.')] + regex[1][regex[1].index('.')+1:]
             div2 = regex[1]
 
-            div = float(div1) / float(div2)
+            div = float(div1) / float(div2) / (10**ponto)
 
             if div == int(div):
                 div = int(div)
@@ -244,9 +258,9 @@ while True:
             sentence = sentence[0:-1]
             sentence += '+'
     elif events == 'minus':
-        if sentence[-1].isnumeric():
+        if sentence[-1].isnumeric() or sentence[-1] in '*/^':
             sentence += '-'
-        elif sentence[-1] in '+*/^√':
+        elif sentence[-1] in '+√':
             sentence = sentence[0:-1]
             sentence += '-'
     elif events == 'mult':
