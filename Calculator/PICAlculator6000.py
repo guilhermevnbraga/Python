@@ -173,7 +173,6 @@ def operations(sentence):
 
             sentence = sentence.split(regex[2])
             sentence = str(sub).join(sentence)
-            sleep(0.5)
         print(sentence)
 
     return sentence
