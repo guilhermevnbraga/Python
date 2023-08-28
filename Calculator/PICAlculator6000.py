@@ -1,7 +1,6 @@
 import PySimpleGUI as sg
 import re
 import math
-from time import sleep
 
 
 # Put multiplications in parentesis and roots
