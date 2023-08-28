@@ -46,6 +46,7 @@ def signreplace(sentence):
 
     return sentence
 
+
 # Find the desired operation with regex
 def findregex(operator, sentence):
     regex1 = re.compile(fr'-?\d*(\.\d*)?\{operator}')
