@@ -1,8 +1,27 @@
 import PySimpleGUI as sg
 import re
 import math
+from time import sleep
 
-# Find the desired operation with regex
+
+# Put multiplications in parentesis and roots
+def innerMult(sentence):
+    innerMultRegex = re.compile(r'[^+-/*√\^](\(|√)|(\)|!)[^+-/*√\^]')
+    mo = innerMultRegex.search(sentence)
+    try:
+        mo = mo.group()
+        if mo in '(√':
+            sentence = innerMultRegex.sub(f'{mo[:-1]}*{mo[-1]}', sentence)
+        else:
+
+            sentence = innerMultRegex.sub(f'{mo[0]}*{mo[1:]}', sentence)
+        print(mo)
+        print(sentence)
+    except AttributeError:
+        return ''
+    return sentence
+
+
 # Verify if there's only a negative number on the sentence
 def isnegative(sentence):
     try:
@@ -27,18 +46,13 @@ def signreplace(sentence):
 
     return sentence
 
-
+# Find the desired operation with regex
 def findregex(operator, sentence):
-    extraMinus = ''
-    if sentence.startswith('-'):
-        extraMinus = '-'
-        sentence = sentence[1:]
-
-    regex1 = re.compile(fr'\d*(\.\d*)?\{operator}')
-    mo = regex1.search(sentence)
-    part1 = extraMinus + mo.group()[:len(mo.group())-1]
+    regex1 = re.compile(fr'-?\d*(\.\d*)?\{operator}')
     regex2 = re.compile(fr'\{operator}\d*(\.\d*)?')
-    mo = regex2.search(sentence)
+    mo = regex1.search(sentence)
+    part1 = mo.group()[:len(mo.group())-1]
+    mo = regex2.search(sentence[1:])
     part2 = mo.group()[1:]
 
     return [part1, part2, part1 + operator + part2]
@@ -148,6 +162,7 @@ def operations(sentence):
             sentence = str(su).join(sentence)
         else:
             regex = findregex('-', sentence)
+            print(regex)
             sub1 = regex[0]
             sub2 = regex[1]
             print(regex[2])
@@ -158,6 +173,7 @@ def operations(sentence):
 
             sentence = sentence.split(regex[2])
             sentence = str(sub).join(sentence)
+            sleep(0.5)
         print(sentence)
 
     return sentence
@@ -167,6 +183,8 @@ def operations(sentence):
 def calculator(sentence):
     parRegex = re.compile(r'\(.*\)')
     sentence = signreplace(sentence)
+    while innerMult(sentence) != '':
+        sentence = innerMult(sentence)
     print(sentence)
 
     while '(' in sentence and ')' in sentence:
@@ -252,31 +270,37 @@ while True:
     elif events == 'nine':
         sentence += '9'
     elif events == 'plus':
-        if sentence[-1].isnumeric():
-            sentence += '+'
-        elif sentence[-1] in '-*/^√':
-            sentence = sentence[0:-1]
-            sentence += '+'
+        if not sentence == '':
+            if sentence[-1].isnumeric():
+                sentence += '+'
+            elif sentence[-1] in '-*/^√':
+                sentence = sentence[0:-1]
+                sentence += '+'
     elif events == 'minus':
-        if sentence[-1].isnumeric() or sentence[-1] in '*/^':
-            sentence += '-'
-        elif sentence[-1] in '+√':
-            sentence = sentence[0:-1]
+        if not sentence == '':
+            if sentence[-1].isnumeric() or sentence[-1] in '*/^':
+                sentence += '-'
+            elif sentence[-1] in '+√':
+                sentence = sentence[0:-1]
+                sentence += '-'
+        else:
             sentence += '-'
     elif events == 'mult':
-        if sentence[-1].isnumeric():
-            sentence += '*'
-        elif sentence[-1] in '+-/^√':
-            sentence = sentence[0:-1]
-            sentence += '*'
+        if not sentence == '':
+            if sentence[-1].isnumeric():
+                sentence += '*'
+            elif sentence[-1] in '+-/^√':
+                sentence = sentence[0:-1]
+                sentence += '*'
     elif events == 'div':
-        if sentence[-1].isnumeric():
-            sentence += '/'
-        elif sentence[-1] in '+*-^√':
-            sentence = sentence[0:-1]
-            sentence += '/'
+        if not sentence == '':
+            if sentence[-1].isnumeric():
+                sentence += '/'
+            elif sentence[-1] in '+*-^√':
+                sentence = sentence[0:-1]
+                sentence += '/'
     elif events == 'potx':
-        if setence[-1].isnumeric():
+        if sentence[-1].isnumeric():
             sentence += '^'
         elif sentence[-1] in '+*-/√':
             sentence = sentence[0:-1]
