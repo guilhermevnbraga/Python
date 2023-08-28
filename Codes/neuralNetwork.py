@@ -62,7 +62,7 @@ while waitedResult != finalLayer:
     for x in data:
         for c in range(3):
             summation = int(x[0]) * actualWeight[c] + int(x[1]) * actualWeight[c]
-            sigmoids.append(round(1/(1 + euler**(-summation)), 34))
+            sigmoids.append(round(1 / (1 + euler**(-summation)), 34))
 
             if len(sigmoids) == 3:
                 firstLayer.append(sigmoids)
@@ -140,7 +140,7 @@ while waitedResult != finalLayer:
     meanError /= 4
     
     print(f'Precisão: {round((1 - meanError) * 100, 2)}%\n')
-    if meanError < 0.01:
+    if  meanError * 100 < 0.01:
         system('clear') or None
         
         print('Solução Encontrada!')
