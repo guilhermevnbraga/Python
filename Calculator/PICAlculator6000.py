@@ -204,8 +204,7 @@ def calculator(sentence):
 
 sg.theme('DarkGreen3')
 layout = [
-    [sg.Text('PICAlculator 6000    ', justification='r', size=(23, 1), font='Arial 18'),
-     sg.Button('⚙', key='settings', size=(2, 1))],
+    [sg.Text('PICAlculator 6000    ', justification='r', size=(23, 1), font='Arial 18')],
     [sg.Text('')],
     [sg.Text(size=(300, 1), key='num2', justification='r')],
     [sg.Text('0', size=(300, 3), justification='r', key='display')],
