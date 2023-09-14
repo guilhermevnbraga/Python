@@ -30,9 +30,9 @@ def calculosGeometria(dataAngulos, xData0, xData1, xData2, xData3):
     return inicioX, inicioY, fimX, fimY
 
 
-detector = r'C:\Users\PESSOAL\Documents\GitHub\Python\ComputerVision\OCRPython\Modelos\frozen_east_text_detection.pb'
+detector = r'/home/s0la1r3/Documentos/GitHub/Python/ComputerVision/OCRPython/Modelos/frozen_east_text_detection.pb'
 largura, altura = 320, 320
-imagem = r'C:\Users\PESSOAL\Documents\GitHub\Python\ComputerVision\OCRPython\Imagens\caneca.jpg'
+imagem = r'/home/s0la1r3/Documentos/GitHub/Python/ComputerVision/OCRPython/Imagens/caneca.jpg'
 confiancaMin = 0.9
 
 img = cv2.imread(imagem)
@@ -89,7 +89,7 @@ cv2.imshow('imagem', roi)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 
-tessdataDir = r'C:\Users\PESSOAL\Documents\GitHub\Python\ComputerVision\OCRPython\tessdata'
+tessdataDir = '/home/s0la1r3/Documentos/GitHub/Python/ComputerVision/OCRPython/tessdata'
 configTessdata = f'--tessdata-dir "{tessdataDir}" --psm 7'
 text = pytesseract.image_to_string(roi, lang='por', config=configTessdata)
 print(text)

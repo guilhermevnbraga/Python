@@ -24,14 +24,14 @@ def caixaTexto(resultado, img, cor = [255, 100, 0]):
     cv2.rectangle(img, (x, y), (x+w, y+h), cor, 2)
     return x, y, img
 
-img = cv2.imread(r'C:\Users\PESSOAL\Documents\GitHub\Python\ComputerVision\OCRPython\Imagens\tabela_teste.jpg')
+img = cv2.imread('/home/s0la1r3/Documentos/GitHub/Python/ComputerVision/OCRPython/Imagens/tabela_teste.jpg')
 rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-tessdataDir = r'C:\Users\PESSOAL\Documents\GitHub\Python\ComputerVision\OCRPython\tessdata'
+tessdataDir = '/home/s0la1r3/Documentos/GitHub/Python/ComputerVision/OCRPython/tessdata'
 configTesseract = f'--tessdata-dir "{tessdataDir}"'
 resultado = pytesseract.image_to_data(rgb, config=configTesseract, lang='por', output_type=Output.DICT)
 dateRegex = r'^(0[1-9]/|[12][0-9]/|3[01]/)?(0[1-9]|1[012])/(19|20)\d\d$'
 dates = []
-fonte = r'C:\Users\PESSOAL\Documents\GitHub\Python\ComputerVision\OCRPython\Fontes\calibri.ttf'
+fonte = '/home/s0la1r3/Documentos/GitHub/Python/ComputerVision/OCRPython/Fontes/calibri.ttf'
 imgCopia = rgb.copy()
 confianca = 40
 for c in range(len(resultado['conf'])):

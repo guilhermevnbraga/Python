@@ -29,8 +29,8 @@ def desenhaCaixa(img, te, bd, corCaixa=(200,255,0), espessura=2):
 
 idiomas = ['en', 'pt']
 gpu = True
-fonte = r'C:\Users\PESSOAL\Documents\GitHub\Python\ComputerVision\OCRPython\Fontes\calibri.ttf'
-img = cv2.imread(r'C:\Users\PESSOAL\Documents\GitHub\Python\ComputerVision\OCRPython\Imagens\google-cloud.jpg')
+fonte = '/home/s0la1r3/Documentos/GitHub/Python/ComputerVision/OCRPython/Fontes/calibri.ttf'
+img = cv2.imread('/home/s0la1r3/Documentos/GitHub/Python/ComputerVision/OCRPython/Imagens/google-cloud.jpg')
 reader = Reader(idiomas, gpu)
 resultados = reader.readtext(img)
 

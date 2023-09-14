@@ -2,7 +2,7 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import pytesseract
 
-img = Image.open(r'C:\Users\PESSOAL\Documents\GitHub\Python\ComputerVision\OCRPython\Imagens\livro01.jpg')
+img = Image.open('/home/s0la1r3/Documentos/GitHub/Python/ComputerVision/OCRPython/Imagens/livro01.jpg')
 plt.imshow(img);
 plt.axis('off')
 plt.show()

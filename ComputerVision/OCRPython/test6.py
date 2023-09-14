@@ -13,9 +13,9 @@ def caixaTexto(resultado, img, cor = [255, 100, 0]):
     return x, y, img
 
 
-img = cv2.imread(r'C:\Users\PESSOAL\Documents\GitHub\Python\ComputerVision\OCRPython\Imagens\teste_manuscrito_01.jpg')
+img = cv2.imread('/home/s0la1r3/Documentos/GitHub/Python/ComputerVision/OCRPython/Imagens/teste-manuscrito01.jpg')
 rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-tessdataDir = r'C:\Users\PESSOAL\Documents\GitHub\Python\ComputerVision\OCRPython\tessdata'
+tessdataDir = '/home/s0la1r3/Documentos/GitHub/Python/ComputerVision/OCRPython/tessdata'
 configTesseract = f'--tessdata-dir "{tessdataDir}"'
 resultado = pytesseract.image_to_data(rgb, config=configTesseract, lang='por', output_type=Output.DICT)
 minConf = 40
