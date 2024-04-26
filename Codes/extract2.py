@@ -16,7 +16,12 @@ def baixar_arquivos(urls, pasta_destino):
     
     for url in urls:
         # Substituir barras invertidas por barras normais
+        print(url)
+        url = url.replace('\\/', '/')
         url = url.replace('\\', '/')
+        if not url.startswith('https://influencersgonewild.com'):
+            url = 'https://influencersgonewild.com' + url
+        print(url)
         # Obter o nome do arquivo da URL
         nome_arquivo = os.path.join(pasta_destino, os.path.basename(url))
         try:
@@ -27,11 +32,11 @@ def baixar_arquivos(urls, pasta_destino):
                 # Salvar o arquivo
                 with open(nome_arquivo, 'wb') as arquivo:
                     arquivo.write(resposta.content)
-                print(f'Arquivo "{nome_arquivo}" baixado com sucesso.')
+                print(f'Arquivo "{nome_arquivo}" baixado com sucesso.', end='\n\n')
             else:
-                print(f'Erro ao baixar o arquivo "{nome_arquivo}": Status Code {resposta.status_code}')
+                print(f'Erro ao baixar o arquivo "{nome_arquivo}": Status Code {resposta.status_code}', end='\n\n')
         except Exception as e:
-            print(f'Erro ao baixar o arquivo "{nome_arquivo}": {str(e)}')
+            print(f'Erro ao baixar o arquivo "{nome_arquivo}": {str(e)}', end='\n\n')
 
 def extrair_links_html(html):
     # Expressão regular para encontrar URLs entre aspas duplas
@@ -54,15 +59,15 @@ def baixar_arquivos_de_url(url, pasta_destino):
             baixar_arquivos([url for url in urls_arquivos if url.endswith(('.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp', '.svg'))], pasta_imagens)
             baixar_arquivos([url for url in urls_arquivos if url.endswith(('.mp4', '.avi', '.mov', '.mkv'))], pasta_videos)
         else:
-            print(f'Erro ao acessar a URL "{url}": Status Code {resposta.status_code}')
+            print(f'Erro ao acessar a URL "{url}": Status Code {resposta.status_code}', end='\n\n')
     except Exception as e:
-        print(f'Erro ao acessar a URL "{url}": {str(e)}')
+        print(f'Erro ao acessar a URL "{url}": {str(e)}', end='\n\n')
 
 # URL de exemplo
-url_exemplo = 'https://exemplo.com'
+url_exemplo = ''
 
 # Pasta de destino para salvar os arquivos baixados
-pasta_destino = 'downloads'
+pasta_destino = ''
 
 # Baixar arquivos da URL fornecida
 baixar_arquivos_de_url(url_exemplo, pasta_destino)

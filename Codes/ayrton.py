@@ -1,0 +1,1 @@
+x, operador, y = int(input()), input(), int(input());print(x + y if operador == '+' else x - y if operador == '-' else x * y if operador == '*' else x // y if operador == '/' else 'Erro: operador não reconhecido.')

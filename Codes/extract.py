@@ -16,7 +16,12 @@ def baixar_imagens(urls, pasta_destino):
     
     for url in urls:
         # Substituir barras invertidas por barras normais
+        print(url)
+        url = url.replace('\\/', '/')
         url = url.replace('\\', '/')
+        if not url.startswith('https://influencersgonewild.com'):
+            url = 'https://influencersgonewild.com' + url
+        print(url)
         # Obter o nome do arquivo da URL
         nome_arquivo = os.path.join(pasta_destino, os.path.basename(url))
         try:
@@ -27,14 +32,14 @@ def baixar_imagens(urls, pasta_destino):
                 # Salvar o arquivo de imagem
                 with open(nome_arquivo, 'wb') as arquivo:
                     arquivo.write(resposta.content)
-                print(f'Arquivo "{nome_arquivo}" baixado com sucesso.')
+                print(f'Arquivo "{nome_arquivo}" baixado com sucesso.', end='\n\n')
             else:
-                print(f'Erro ao baixar o arquivo "{nome_arquivo}": Status Code {resposta.status_code}')
+                print(f'Erro ao baixar o arquivo "{nome_arquivo}": Status Code {resposta.status_code}', end='\n\n')
         except Exception as e:
-            print(f'Erro ao baixar o arquivo "{nome_arquivo}": {str(e)}')
+            print(f'Erro ao baixar o arquivo "{nome_arquivo}": {str(e)}', end='\n\n')
 
 # Exemplo de texto
-texto = '''Este é um exemplo de "foto.jpg", "outra_foto.jpeg" e "terceira_foto.png". Mas "esta_foto.png" não deve ser pega.'''
+texto = ''''''
 # Pasta de destino para salvar as imagens baixadas
 pasta_destino = 'imagens'
 
