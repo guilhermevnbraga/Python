@@ -19,7 +19,7 @@ if not exists('./Codes/db'):
     makedirs('./Codes/db')
 chdir('./Codes/db')
 
-rewrite()
+# rewrite() uncomment this if you want to restart database
 
 data = [
     '00',
@@ -139,9 +139,9 @@ while waitedResult != finalLayer:
     	meanError += abs(int(waitedResult[c]) - finalLayer[c])
     meanError /= 4
     
-    print(f'Precisão: {round((1 - meanError) * 100, 2)}%\n')
-    if  meanError * 100 < 0.01:
-        system('clear') or None
+    print(f'Precisão: {(1 - meanError) * 100}%\n')
+    if  meanError * 100 < 0.1:
+        system('cls') or None
         
         print('Solução Encontrada!')
         for c in range(len(actualWeight)):
@@ -151,8 +151,7 @@ while waitedResult != finalLayer:
         for c in range(len(finalLayer)):
     	    print(f'S{c}: {round(finalLayer[c], 3)}')
     	    
-        print(f'Precisão: {round((1 - meanError) * 100, 2)}%\n')
+        print(f'Precisão: {(1 - meanError) * 100}%\n')
         break
     
-    sleep(0.01)
-    system('clear') or None
+    system('cls') or None
